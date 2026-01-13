@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String    @id @default(uuid())
+  name     String?
+  email    String    @unique
+
+  bookings       Booking[]
+  reservedRooms  Room[]    @relation("RoomReservedBy")
+}
+
+model Room {
+  id           String    @id @default(uuid())
+  roomNumber   Int       @unique
+  isReserved   Boolean   @default(false)
+  reservedById String?
+
+  reservedBy   User?     @relation("RoomReservedBy", fields: [reservedById], references: [id])
+  bookings     Booking[]
+}
+
+model Booking {
+  id      String   @id @default(uuid())
+  date    DateTime
+
+  userId  String
+  roomId  String
+
+  user User @relation(fields: [userId], references: [id])
+  room Room @relation(fields: [roomId], references: [id])
+}
