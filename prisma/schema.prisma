@@ -1,37 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }
 
 model User {
-  id       String    @id @default(uuid())
-  name     String?
-  email    String    @unique
+  id    String  @id @default(uuid())
+  name  String?
+  email String  @unique
 
-  bookings       Booking[]
-  reservedRooms  Room[]    @relation("RoomReservedBy")
+  bookings      Booking[]
+  reservedRooms Room[]    @relation("RoomReservedBy")
+  sessions      Session[]
+  accounts      Account[]
 }
 
 model Room {
-  id           String    @id @default(uuid())
-  roomNumber   Int       @unique
-  isReserved   Boolean   @default(false)
+  id           String  @id @default(uuid())
+  roomNumber   Int     @unique
+  isReserved   Boolean @default(false)
   reservedById String?
 
-  reservedBy   User?     @relation("RoomReservedBy", fields: [reservedById], references: [id])
-  bookings     Booking[]
+  reservedBy User?     @relation("RoomReservedBy", fields: [reservedById], references: [id])
+  bookings   Booking[]
 }
 
 model Booking {
-  id      String   @id @default(uuid())
-  date    DateTime
+  id   String   @id @default(uuid())
+  date DateTime
 
-  userId  String
-  roomId  String
+  userId String
+  roomId String
 
   user User @relation(fields: [userId], references: [id])
   room Room @relation(fields: [roomId], references: [id])

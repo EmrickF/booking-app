@@ -8,45 +8,43 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
-      {/* HERO */}
       <section className="max-w-6xl mx-auto px-6 py-24 text-center space-y-8">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-          Book rooms easily and securely
+          Booking app
         </h1>
 
         <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-          A simple booking system built with Next.js, Prisma and secure authentication.
+          Christian hack in me fö hårt
         </p>
 
         <div className="flex justify-center gap-4">
           <Link href="/booking">
-            <Button size="lg">Start booking</Button>
+            <Button variant="default"size="lg">Start booking</Button>
           </Link>
           <Link href="/login">
-            <Button variant="outline" size="lg">
+            <Button variant="default" size="lg">
               Sign in
             </Button>
           </Link>
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section className="max-w-6xl mx-auto px-6 py-16 grid gap-6 md:grid-cols-3">
+      <section className="max-w-4xl mx-auto px-6 py-18 grid gap-8 md:grid-cols-3 ">
         {[
           {
             title: "1. Sign in",
-            text: "Secure authentication with BetterAuth",
+            text: "Sign in with your account",
           },
           {
             title: "2. Pick a date",
-            text: "Use the calendar to see availability",
+            text: "Use the calendar down below to see availability",
           },
           {
             title: "3. Confirm booking",
             text: "Instant confirmation in real time",
           },
         ].map((step) => (
-          <Card key={step.title}>
+          <Card key={step.title} className="transition-transform duration-300 hover:scale-125">
             <CardContent className="p-6 space-y-2">
               <h3 className="font-semibold">{step.title}</h3>
               <p className="text-sm text-muted-foreground">
@@ -68,7 +66,7 @@ export default function HomePage() {
         </p>
 
         <div className="flex justify-center">
-          <Card>
+          <Card className="w-auto">
             <CardContent className="p-4">
               <Calendar
                 mode="single"
