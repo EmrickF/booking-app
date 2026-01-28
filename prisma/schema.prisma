@@ -62,24 +62,32 @@ model Verification {
 }
 
 model User {
-  id    String  @id @default(uuid())
-  name  String?
-  email String  @unique
+  id        String   @id @default(cuid())
+  email     String?  @unique
+  name      String?
+  image     String?
+  createdAt DateTime @default(now())
 
-  bookings      Booking[]
+  accounts Account[]
+  bookings Booking[]
+
   reservedRooms Room[]    @relation("RoomReservedBy")
   sessions      Session[]
-  accounts      Account[]
+  emailVerified Boolean   @default(false)
+  updatedAt     DateTime  @updatedAt
+
+  @@map("user")
 }
 
 model Room {
-  id           String  @id @default(uuid())
-  roomNumber   Int     @unique
-  isReserved   Boolean @default(false)
-  reservedById String?
+  id         String  @id @default(uuid())
+  roomNumber Int     @unique
+  isReserved Boolean @default(false)
 
-  reservedBy User?     @relation("RoomReservedBy", fields: [reservedById], references: [id])
-  bookings   Booking[]
+  reservedById String?
+  reservedBy   User?   @relation("RoomReservedBy", fields: [reservedById], references: [id])
+
+  bookings Booking[]
 }
 
 model Booking {

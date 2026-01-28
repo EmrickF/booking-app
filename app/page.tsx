@@ -1,10 +1,17 @@
+"use client"
 import Link from "next/link"
 import { Navbar } from "@/components/navbar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Calendar } from "@/components/ui/calendar"
+import dynamic from "next/dynamic"
+
+const Calendar = dynamic(
+  () => import("@/components/ui/calendar").then(m => m.Calendar),
+  { ssr: false }
+)
 
 export default function HomePage() {
+  
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
@@ -14,7 +21,7 @@ export default function HomePage() {
         </h1>
 
         <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-          Christian hack in me fö hårt
+          Christian hack int me fö hårt
         </p>
 
         <div className="flex justify-center gap-4">
@@ -55,7 +62,6 @@ export default function HomePage() {
         ))}
       </section>
 
-      {/* AVAILABILITY PREVIEW */}
       <section className="max-w-4xl mx-auto px-6 py-20 text-center space-y-6">
         <h2 className="text-2xl font-semibold">
           Availability preview

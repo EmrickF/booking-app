@@ -1,23 +1,32 @@
-import Link from "next/link"
+"use client"
+
+import { authClient } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 
 export function Navbar() {
-  return (
-    <nav className="border-b">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="font-bold">
-          BookingApp
-        </Link>
+  const { data: session } = authClient.useSession()
 
-        <div className="flex gap-3">
-          <Link href="/login">
-            <Button variant="outline">Login</Button>
-          </Link>
-          <Link href="/booking">
-            <Button>Book</Button>
-          </Link>
+  return (
+    <nav className="flex justify-between p-4 border-b">
+      <span className="font-bold">Booking app</span>
+
+      {session ? (
+        <div className="flex items-center gap-4">
+          <span>{session.user.name}</span>
+          <Button
+            variant="outline"
+            onClick={() => authClient.signOut({
+              callbackURL: "/",
+            })}
+          >
+            Log out
+          </Button>
         </div>
-      </div>
+      ) : (
+        <Button asChild>
+          <a href="/login">Sign in</a>
+        </Button>
+      )}
     </nav>
   )
 }

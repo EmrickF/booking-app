@@ -1,9 +1,12 @@
-import { AuthForm } from "@/components/auth/auth-form";
+"use client"
+import { LoginForm } from "@/components/login-form"
 
-export default function LoginPage() {
+export default function Page() {
   return (
-    <main className="min-h-screen flex items-center justify-center px-4">
-      <AuthForm mode="login" />
-    </main>
-  );
+    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <LoginForm />
+      </div>
+    </div>
+  )
 }
