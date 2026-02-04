@@ -9,7 +9,7 @@ export function LoginForm() {
   }}
 >
   Sign in with GitHub
-</button>
+</Button>
 
   )
 }
