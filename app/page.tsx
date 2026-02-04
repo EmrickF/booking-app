@@ -3,7 +3,9 @@ import Link from "next/link"
 import { Navbar } from "@/components/navbar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { ArrowUp } from "lucide-react"
 import dynamic from "next/dynamic"
+import { authClient } from "@/lib/auth-client"
 
 const Calendar = dynamic(
   () => import("@/components/ui/calendar").then(m => m.Calendar),
@@ -11,6 +13,7 @@ const Calendar = dynamic(
 )
 
 export default function HomePage() {
+  const { data: session } = authClient.useSession()
   
   return (
     <main className="min-h-screen bg-background">
@@ -25,14 +28,22 @@ export default function HomePage() {
         </p>
 
         <div className="flex justify-center gap-4">
-          <Link href="/booking">
-            <Button variant="default"size="lg">Start booking</Button>
-          </Link>
-          <Link href="/login">
-            <Button variant="default" size="lg">
-              Sign in
-            </Button>
-          </Link>
+          <div className="flex flex-col items-center gap-2">
+            <Link href="/booking">
+              <Button variant="default"size="lg">Start booking</Button>
+            </Link>
+            {session && <ArrowUp size={40} className="text-black animate-bounce" />}
+          </div>
+          {!session && (
+            <div className="flex flex-col items-center gap-2">
+              <Link href="/login">
+                <Button variant="default" size="lg">
+                  Sign in
+                </Button>
+              </Link>
+              <ArrowUp size={40} className="text-black animate-bounce" />
+            </div>
+          )}
         </div>
       </section>
 

@@ -1,15 +1,25 @@
-import { auth } from '@/lib/auth'
-import { redirect, RedirectType } from 'next/navigation'
-import { headers } from 'next/headers'
+import { auth } from "@/lib/auth"
+import { redirect } from "next/navigation"
+import { cookies } from "next/headers"
+import { BookingClient } from "@/components/booking/booking-client"
+import prisma from "@/lib/prisma"
 
+export default async function BookingPage() {
+  const session = await auth.api.getSession({
+    headers: { cookie: (await cookies()).toString() },
+  })
 
+  if (!session) redirect("/login")
 
-export default async function ProtectedPage() {
-    const session = await auth.api.getSession({headers: await headers()})
-    if(!session) {
-        redirect('/login', RedirectType.push)
-    }
+  const rooms = await prisma.room.findMany({
+    orderBy: { roomNumber: "asc" },
+  })
+
   return (
-    <div>Detta är en sida man endast kan besöka om man är inloggad</div>
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Boka ett rum</h1>
+
+      <BookingClient rooms={rooms} userId={session.user.id} />
+    </div>
   )
 }

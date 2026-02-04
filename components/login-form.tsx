@@ -1,15 +1,17 @@
 "use client"
 
+import { authClient } from "@/lib/auth-client"
+import { Button } from "./ui/button"
 
-export function LoginForm() {
+export function LoginButton() {
   return (
-<button
-  onClick={() => {
-    window.location.href = "/api/auth/sign-in/github"
-  }}
->
-  Sign in with GitHub
-</Button>
-
+    <Button
+      onClick={() => authClient.signIn.social({
+        provider: "github",
+        callbackURL: "/",
+      })}
+    >
+      Sign in with GitHub
+    </Button>
   )
 }
