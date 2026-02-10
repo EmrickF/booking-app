@@ -75,7 +75,6 @@ export function BookingClient({ rooms, userId }: any) {
           onSelect={setStartDate}
           disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0)) || bookedDates.some(d => d.toDateString() === date.toDateString())}
           bookedDates={bookedDates}
-          suppressHydrationWarning
         />
       </div>
 
@@ -88,7 +87,6 @@ export function BookingClient({ rooms, userId }: any) {
             onSelect={setEndDate}
             disabled={(date) => date <= startDate || bookedDates.some(d => d.toDateString() === date.toDateString())}
             bookedDates={bookedDates}
-            suppressHydrationWarning
           />
         </div>
       )}

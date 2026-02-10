@@ -15,9 +15,7 @@ export function Navbar() {
           <span>{session.user.name}</span>
           <Button
             variant="outline"
-            onClick={() => authClient.signOut({
-              callbackURL: "/",
-            })}
+            onClick={() => authClient.signOut()}
           >
             Log out
           </Button>
