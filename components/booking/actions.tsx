@@ -21,18 +21,15 @@ export async function createBooking({
     throw new Error("Not authenticated")
   }
 
-  // Normalize dates to start of day for comparison
   const start = new Date(startDate)
   start.setHours(0, 0, 0, 0)
   const end = new Date(endDate)
   end.setHours(0, 0, 0, 0)
 
-  // Validate minimum 1-night booking
   if (end <= start) {
     throw new Error("Check-out date must be at least 1 day after check-in date")
   }
 
-  // Check for conflicts with existing bookings
   const conflicts = await prisma.booking.findMany({
     where: {
       roomId,
@@ -50,7 +47,6 @@ export async function createBooking({
     throw new Error(`Room is booked on: ${conflictDates}`)
   }
 
-  // Create bookings for each day in the range
   const bookings = []
   let currentDate = new Date(start)
   

@@ -10,10 +10,26 @@ export function BookingClient({ rooms, userId }: any) {
   const [roomId, setRoomId] = useState<string>()
   const [startDate, setStartDate] = useState<Date>()
   const [endDate, setEndDate] = useState<Date>()
+  const [bookedDates, setBookedDates] = useState<Date[]>([])
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  useEffect(() => {
+    if (roomId && mounted) {
+      // Fetch booked dates for the selected room
+      fetch(`/api/rooms/bookings?roomId=${roomId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const dates = data.map((booking: any) => new Date(booking.date))
+          setBookedDates(dates)
+        })
+        .catch(() => setBookedDates([]))
+    } else {
+      setBookedDates([])
+    }
+  }, [roomId, mounted])
 
   const isValidBooking = roomId && startDate && endDate && endDate > startDate
 
@@ -57,7 +73,8 @@ export function BookingClient({ rooms, userId }: any) {
           mode="single" 
           selected={startDate} 
           onSelect={setStartDate}
-          disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+          disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0)) || bookedDates.some(d => d.toDateString() === date.toDateString())}
+          bookedDates={bookedDates}
           suppressHydrationWarning
         />
       </div>
@@ -69,7 +86,8 @@ export function BookingClient({ rooms, userId }: any) {
             mode="single" 
             selected={endDate} 
             onSelect={setEndDate}
-            disabled={(date) => date <= startDate}
+            disabled={(date) => date <= startDate || bookedDates.some(d => d.toDateString() === date.toDateString())}
+            bookedDates={bookedDates}
             suppressHydrationWarning
           />
         </div>

@@ -8,7 +8,7 @@ export function Navbar() {
 
   return (
     <nav className="flex justify-between p-4 border-b">
-      <span className="font-bold">Booking app</span>
+      <span className="font-bold text-lg">Booking app</span>
 
       {session ? (
         <div className="flex items-center gap-4">
