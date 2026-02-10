@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { cookies } from "next/headers"
+import { revalidatePath } from "next/cache"
 
 export async function createBooking({
   roomId,
@@ -63,4 +64,32 @@ export async function createBooking({
   await prisma.booking.createMany({
     data: bookings,
   })
+}
+
+export async function deleteBooking(bookingId: string) {
+  const session = await auth.api.getSession({
+    headers: { cookie: (await cookies()).toString() },
+  })
+
+  if (!session) {
+    throw new Error("Not authenticated")
+  }
+
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+  })
+
+  if (!booking) {
+    throw new Error("Booking not found")
+  }
+
+  if (booking.userId !== session.user.id) {
+    throw new Error("Not authorized to delete this booking")
+  }
+
+  await prisma.booking.delete({
+    where: { id: bookingId },
+  })
+
+  revalidatePath("/booking")
 }
