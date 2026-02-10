@@ -11,7 +11,6 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  // Validate roomId format to prevent injection
   if (typeof roomId !== "string" || roomId.length === 0) {
     return NextResponse.json(
       { error: "Invalid roomId" },
@@ -20,7 +19,6 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Verify room exists
     const room = await prisma.room.findUnique({
       where: { id: roomId },
     })
