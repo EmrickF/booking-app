@@ -1,5 +1,5 @@
 "use client"
-
+import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { createBooking } from "@/components/booking/actions"
 import { Button } from "@/components/ui/button"
@@ -11,14 +11,15 @@ export function BookingClient({ rooms, userId }: any) {
   const [startDate, setStartDate] = useState<Date>()
   const [endDate, setEndDate] = useState<Date>()
   const [bookedDates, setBookedDates] = useState<Date[]>([])
+  const router = useRouter()
 
+  
   useEffect(() => {
     setMounted(true)
   }, [])
 
   useEffect(() => {
     if (roomId && mounted) {
-      // Fetch booked dates for the selected room
       fetch(`/api/rooms/bookings?roomId=${roomId}`)
         .then((res) => res.json())
         .then((data) => {
@@ -106,10 +107,12 @@ export function BookingClient({ rooms, userId }: any) {
           try {
             await createBooking({ roomId: roomId!, startDate: startDate!, endDate: endDate! })
             alert("Booking confirmed!")
+            router.refresh()
             setRoomId(undefined)
             setStartDate(undefined)
             setEndDate(undefined)
-          } catch (error) {
+          } catch 
+          (error) {
             alert(`Booking failed: ${error instanceof Error ? error.message : "Unknown error"}`)
           }
         }}
