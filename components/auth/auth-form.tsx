@@ -8,24 +8,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 
 type AuthFormProps = {
-  mode: "login" | "signup";
-};
+  mode: "login" | "signup"
+}
 
 export function AuthForm({ mode }: AuthFormProps) {
-  const router = useRouter();
-  const isLogin = mode === "login";
+  const router = useRouter()
+  const isLogin = mode === "login"
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [name, setName] = useState("")
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+    e.preventDefault()
 
     if (isLogin) {
-      await authClient.signIn.email({ email, password });
+      await authClient.signIn.email({ email, password })
     } else {
-      await authClient.signUp.email({ email, password, name });
+      await authClient.signUp.email({ email, password, name })
     }
   }
 
@@ -36,7 +36,6 @@ export function AuthForm({ mode }: AuthFormProps) {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* FORM – ENBART AUTH */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
             <div>
@@ -68,9 +67,8 @@ export function AuthForm({ mode }: AuthFormProps) {
           </Button>
         </form>
 
-        {/* NAVIGATION – UTANFÖR FORM */}
         <p className="text-sm text-center text-muted-foreground">
-          {isLogin ? "Don’t have an account?" : "Already have an account?"}{" "}
+          {isLogin ? "Dont have an account?" : "Already have an account?"}{" "}
           <button
             type="button"
             onClick={() => router.push(isLogin ? "/signup" : "/login")}
@@ -81,5 +79,5 @@ export function AuthForm({ mode }: AuthFormProps) {
         </p>
       </CardContent>
     </Card>
-  );
+  )
 }
